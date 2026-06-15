@@ -1,0 +1,94 @@
+<<<<<<< HEAD
+# 대용량 데이터
+resource/004.수어영상/
+resource/keypoint_data/
+resource/word_morpheme/
+resource/signhand_sample/
+resource/keypoints/
+
+# 학습 데이터
+resource/train_data/
+
+# 모델 파일
+# resource/*.h5
+# resource/*.keras
+# resource/*.onnx
+# resource/sign_saved_model/
+
+# numpy 데이터
+resource/*.npy
+
+# API 키 및 실행파일
+resource/aihubshell
+aihubshell.exe
+.env
+
+# 압축 파일
+*.zip
+*.zip.part*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# 기타
+.DS_Store
+Thumbs.db
+
+# 캐시 keypoints (추가)
+# resource/cached_keypoints/
+
+# onnx data 파일 (추가)
+resource/*.onnx.data
+
+# 가상환경 (추가)
+venv/
+=======
+# 대용량 데이터
+resource/004.수어영상/
+resource/keypoint_data/
+resource/word_morpheme/
+resource/signhand_sample/
+resource/keypoints/
+
+# 학습 데이터
+resource/train_data/
+
+# 모델 파일
+# resource/*.h5
+# resource/*.keras
+# resource/*.onnx
+# resource/sign_saved_model/
+
+# numpy 데이터
+resource/*.npy
+
+# API 키 및 실행파일
+resource/aihubshell
+aihubshell.exe
+.env
+
+# 압축 파일
+*.zip
+*.zip.part*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# 기타
+.DS_Store
+Thumbs.db
+
+# 캐시 keypoints (추가)
+# resource/cached_keypoints/
+
+# onnx data 파일 (추가)
+resource/*.onnx.data
+
+# 가상환경 (추가)
+venv/
+>>>>>>> 4ca89aedfe14cc6a784c084c8dc777b42d3b5f55
+.venv/
