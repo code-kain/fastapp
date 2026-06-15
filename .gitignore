@@ -1,94 +1,51 @@
-<<<<<<< HEAD
-# 대용량 데이터
+# ===== 시크릿 (절대 올리면 안 됨) =====
+.env
+*.key
+
+# ===== 대용량 원본 데이터 (올리지 않음) =====
 resource/004.수어영상/
 resource/keypoint_data/
 resource/word_morpheme/
 resource/signhand_sample/
 resource/keypoints/
 
-# 학습 데이터
+# 학습 데이터 (X.npy, y.npy - 용량 큼)
 resource/train_data/
 
-# 모델 파일
+# ===== 올리는 것 (주석 처리로 허용) =====
+# 모델 파일은 작아서(1.4MB 이하) 올림 → 팀원 실행에 필수
 # resource/*.h5
 # resource/*.keras
 # resource/*.onnx
+# resource/*.onnx.data
 # resource/sign_saved_model/
 
-# numpy 데이터
-resource/*.npy
+# cached_keypoints(12MB)는 올림 → 아바타 실행에 필수
+# resource/cached_keypoints/
 
-# API 키 및 실행파일
+# numpy: train_data 안의 것만 막고 cached_keypoints는 허용
+resource/train_data/*.npy
+
+# ===== 실행파일 =====
 resource/aihubshell
 aihubshell.exe
-.env
 
-# 압축 파일
+# ===== 압축 파일 =====
 *.zip
 *.zip.part*
 
-# Python
+# ===== Python =====
 __pycache__/
 *.pyc
 *.pyo
 
-# 기타
-.DS_Store
-Thumbs.db
-
-# 캐시 keypoints (추가)
-# resource/cached_keypoints/
-
-# onnx data 파일 (추가)
-resource/*.onnx.data
-
-# 가상환경 (추가)
+# 가상환경
 venv/
-=======
-# 대용량 데이터
-resource/004.수어영상/
-resource/keypoint_data/
-resource/word_morpheme/
-resource/signhand_sample/
-resource/keypoints/
-
-# 학습 데이터
-resource/train_data/
-
-# 모델 파일
-# resource/*.h5
-# resource/*.keras
-# resource/*.onnx
-# resource/sign_saved_model/
-
-# numpy 데이터
-resource/*.npy
-
-# API 키 및 실행파일
-resource/aihubshell
-aihubshell.exe
-.env
-
-# 압축 파일
-*.zip
-*.zip.part*
-
-# Python
-__pycache__/
-*.pyc
-*.pyo
-
-# 기타
-.DS_Store
-Thumbs.db
-
-# 캐시 keypoints (추가)
-# resource/cached_keypoints/
-
-# onnx data 파일 (추가)
-resource/*.onnx.data
-
-# 가상환경 (추가)
-venv/
->>>>>>> 4ca89aedfe14cc6a784c084c8dc777b42d3b5f55
 .venv/
+env/
+
+# ===== 기타 =====
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
