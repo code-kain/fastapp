@@ -7,7 +7,7 @@ from app.ai_analysis.schemas.learning_analysis_schema import (
 from app.ai_analysis.services.learning_analysis_service import analyze_learning_results
 
 
-router = APIRouter(prefix="/ai/learning-analysis", tags=["AI 학습 분석"])
+router = APIRouter(prefix="/ai/learning-analysis", tags=["AI 학습분석"])
 
 
 # 학습 분석 리포트 생성
