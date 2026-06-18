@@ -44,7 +44,9 @@ def analyze_learning_results(
 
 
 # 종합 리포트 생성
-def create_analysis_report(request: LearningAnalysisRequestSchema) -> AnalysisReportSchema:
+def create_analysis_report(
+    request: LearningAnalysisRequestSchema,
+) -> AnalysisReportSchema:
     total_correct_count = sum(result.correctCount for result in request.results)
     total_question_count = sum(result.totalCount for result in request.results)
     total_study_minutes = sum(result.studyTimeMinutes for result in request.results)
@@ -81,6 +83,7 @@ def create_overall_analysis_list(
 
     for category in ordered_categories:
         category_results = category_group.get(category, [])
+
         if not category_results:
             continue
 
@@ -127,6 +130,7 @@ def create_individual_analysis_list(
 
     for index, grouped_result in enumerate(grouped_results, start=1):
         category = grouped_result["category"]
+
         rate = calculate_rate(
             grouped_result["correct_count"],
             grouped_result["total_count"],
@@ -138,43 +142,45 @@ def create_individual_analysis_list(
                 title=grouped_result["title"],
                 category=category,
                 rate=rate,
-                studyTime=format_study_time(grouped_result["study_time_minutes"]),
+                studyTime=format_study_time(
+                    grouped_result["study_time_minutes"]
+                ),
                 questionCount=grouped_result["total_count"],
                 color=get_category_color(category),
                 answers=grouped_result["answers"],
-                guide=get_individual_guide(grouped_result["guide_result"], rate),
+                guide=get_individual_guide(
+                    grouped_result["guide_result"],
+                    rate,
+                ),
             )
         )
 
     return individual_analysis_list
 
 
-# 같은 학습 결과 묶기
+# 같은 학습은 최근 결과만 사용
 def group_results_for_individual_analysis(
     results: List[LearningResultItemSchema],
 ):
     grouped_map = {}
 
+    # Spring에서 최근 학습 순서로 전달되므로 첫 번째 결과만 저장
     for result in results:
         category = normalize_category(result.category)
         key = f"{category}:{result.title}"
 
-        if key not in grouped_map:
-            grouped_map[key] = {
-                "title": result.title,
-                "category": category,
-                "correct_count": 0,
-                "total_count": 0,
-                "study_time_minutes": 0,
-                "answers": [],
-                "guide_result": result,
-            }
+        if key in grouped_map:
+            continue
 
-        grouped = grouped_map[key]
-        grouped["correct_count"] += result.correctCount
-        grouped["total_count"] += result.totalCount
-        grouped["study_time_minutes"] += result.studyTimeMinutes
-        grouped["answers"].extend(convert_answers_to_marks(result.answers))
+        grouped_map[key] = {
+            "title": result.title,
+            "category": category,
+            "correct_count": result.correctCount,
+            "total_count": result.totalCount,
+            "study_time_minutes": result.studyTimeMinutes,
+            "answers": convert_answers_to_marks(result.answers),
+            "guide_result": result,
+        }
 
     return list(grouped_map.values())
 
@@ -193,7 +199,9 @@ def group_results_by_category(
 
 
 # 카테고리 정답률 계산
-def calculate_category_rate(results: List[LearningResultItemSchema]) -> int:
+def calculate_category_rate(
+    results: List[LearningResultItemSchema],
+) -> int:
     correct_count = sum(result.correctCount for result in results)
     total_count = sum(result.totalCount for result in results)
 
@@ -253,25 +261,46 @@ def get_category_guide(category: str, rate: int) -> str:
 
 
 # 개별 추천 문구
-def get_individual_guide(result: LearningResultItemSchema, rate: int) -> str:
+def get_individual_guide(
+    result: LearningResultItemSchema,
+    rate: int,
+) -> str:
     category = normalize_category(result.category)
 
     if rate >= 85:
-        return f"{result.title} 학습 성취도가 높아요. 다음 단계 학습으로 넘어가도 좋아요."
+        return (
+            f"{result.title} 학습 성취도가 높아요. "
+            "다음 단계 학습으로 넘어가도 좋아요."
+        )
 
     if rate >= 70:
-        return f"{result.title} 이해도는 안정적이에요. 틀린 문제만 다시 확인해보세요."
+        return (
+            f"{result.title} 이해도는 안정적이에요. "
+            "틀린 문제만 다시 확인해보세요."
+        )
 
     if rate >= 50:
-        return f"{result.title}에서 오답이 반복되고 있어요. 관련 개념을 다시 복습해보세요."
+        return (
+            f"{result.title}에서 오답이 반복되고 있어요. "
+            "관련 개념을 다시 복습해보세요."
+        )
 
     if category == LearningCategory.SIGN:
-        return "수어 표현 이해가 부족해요. 기초 표현과 예문을 다시 학습해보세요."
+        return (
+            "수어 표현 이해가 부족해요. "
+            "기초 표현과 예문을 다시 학습해보세요."
+        )
 
     if category == LearningCategory.MORSE:
-        return "모스부호 신호 구분에서 오답이 많아요. 짧은 신호와 긴 신호를 반복 연습하세요."
+        return (
+            "모스부호 신호 구분에서 오답이 많아요. "
+            "짧은 신호와 긴 신호를 반복 연습하세요."
+        )
 
     if category == LearningCategory.BRAILLE:
-        return "점자 영역 규칙과 반복 패턴에서 오답이 많아요. 기초 규칙을 다시 학습하고 유사 패턴을 반복 연습하세요."
+        return (
+            "점자 영역 규칙과 반복 패턴에서 오답이 많아요. "
+            "기초 규칙을 다시 학습하고 유사 패턴을 반복 연습하세요."
+        )
 
     return "기초 개념을 다시 학습하고 오답 문제를 반복해서 풀어보세요."
